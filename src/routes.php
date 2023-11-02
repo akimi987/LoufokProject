@@ -7,16 +7,16 @@ les routes
 -------------------------------------------------------------------------------
  */
 
-return [
+//return [
 
   // accueil et affichage pour les avatars
-  ['GET', '/', 'avatar@index'],
-  ['GET', '/list', 'avatar@index'],
+ // ['GET', '/', 'avatar@index'],
+  //['GET', '/list', 'avatar@index'],
 
   // afficher le formulaire d'ajouter un nouvel avatar
-  ['GET', '/avatar/ajouter', 'avatar@add'],
+  //['GET', '/avatar/ajouter', 'avatar@add'],
   // enregistrer les données soumises d'un nouvel avatar
-  ['POST', '/avatar/ajouter', 'avatar@save'],
+  //['POST', '/avatar/ajouter', 'avatar@save'],
 
   // afficher le formulaire d'édition un nouvel existant
   // à compléter ...
@@ -26,6 +26,6 @@ return [
 
   // effacer un avatar
   // à compléter ...
-  ['GET', '/avatar/effacer/{id:\d+}', 'avatar@delete'],
+  //['GET', '/avatar/effacer/{id:\d+}', 'avatar@delete'],
 
-];
+//];

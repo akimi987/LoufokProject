@@ -1,27 +1,74 @@
 --
--- Base de données : `mvc.generic-demo`
+-- Base de données : `loufok`
 --
 
 -- --------------------------------------------------------
 
-CREATE TABLE `avatar` (
-  `id` int(11) NOT NULL,
-  `email` varchar(250) NOT NULL,
-  `password` varchar(50) NOT NULL,
-  `display_name` varchar(50) NOT NULL,
-  `illustration` varchar(250) DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+CREATE TABLE Joueur(
+   id_joueur INT,
+   nom_plume VARCHAR(50) NOT NULL,
+   ad_mail_joueur VARCHAR(50) NOT NULL,
+   sexe VARCHAR(50) NOT NULL,
+   ddn DATE NOT NULL,
+   mot_de_passe_joueur VARCHAR(50) NOT NULL,
+   PRIMARY KEY(id_joueur),
+   UNIQUE(nom_plume)
+);
+ALTER TABLE `Joueur`
+  ADD PRIMARY KEY (`id_joueur`);
 
-INSERT INTO `avatar` (`id`, `email`, `password`, `display_name`, `illustration`, `created_at`) VALUES
-(7, 'avatar-demo1@gmail.fr', 'avatar1', 'avatar-1', 'avatar01_64c79b7acb622.webp', '2023-07-31 11:31:06'),
-(8, 'avatar-demo2@gmail.fr', 'avatar-1', 'avatar-2', 'avatar02_64c79b8ff07b5.webp', '2023-07-31 11:31:28'),
-(9, 'avatar-demo3@gmail.fr', 'avatar-1', 'avatar-3', 'avatar03_64c79ba0805d8.webp', '2023-07-31 11:31:44'),
-(10, 'avatar-demo4@gmail.fr', 'avatar-1', 'avatar-4', 'avatar05_64c79bb521462.webp', '2023-07-31 11:32:05');
+CREATE TABLE Administrateur(
+   id_administrateur INT,
+   ad_mail_administrateur VARCHAR(50) NOT NULL,
+   mot_de_passe_administrateur VARCHAR(50) NOT NULL,
+   PRIMARY KEY(id_administrateur)
+);
+ALTER TABLE `id_administrateur`
+ADD PRIMARY KEY (`id`);
 
-ALTER TABLE `avatar`
-  ADD PRIMARY KEY (`id`);
+CREATE TABLE Cadavre(
+   id_cadavre INT,
+   titre_cadavre VARCHAR(100) NOT NULL,
+   date_debut_cadavre DATETIME NOT NULL,
+   date_fin_cadavre DATETIME NOT NULL,
+   nb_contributions INT NOT NULL,
+   nb_jaime INT NOT NULL,
+   id_administrateur INT NOT NULL,
+   PRIMARY KEY(id_cadavre),
+   FOREIGN KEY(id_administrateur) REFERENCES Administrateur(id_administrateur)
+);
+ALTER TABLE `Cadavre`
+ADD PRIMARY KEY (`id_cadavre`);
+ADD KEY `id_administrateur` (`id_administrateur`);
 
-ALTER TABLE `avatar`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
-COMMIT;
+
+CREATE TABLE Contribution(
+   id_contribution VARCHAR(50),
+   texte_contribution VARCHAR(280) NOT NULL,
+   date_soumission DATETIME NOT NULL,
+   ordre_soumission VARCHAR(50) NOT NULL,
+   id_administrateur INT,
+   id_cadavre INT NOT NULL,
+   PRIMARY KEY(id_contribution),
+   FOREIGN KEY(id_administrateur) REFERENCES Administrateur(id_administrateur),
+   FOREIGN KEY(id_cadavre) REFERENCES Cadavre(id_cadavre)
+);
+ALTER TABLE `Contribution`
+ADD PRIMARY KEY (`id_contribution`);
+ADD KEY `id_cadavre` (`id_cadavre`);
+ADD KEY `id_administrateur` (`id_administrateur`);
+
+CREATE TABLE Soumettre(
+   id_joueur INT,
+   id_cadavre INT,
+   num_contribution INT NOT NULL,
+   PRIMARY KEY(id_joueur, id_cadavre),
+   FOREIGN KEY(id_joueur) REFERENCES Joueur(id_joueur),
+   FOREIGN KEY(id_cadavre) REFERENCES Cadavre(id_cadavre)
+);
+
+  ALTER TABLE `Soumettre`
+  ADD PRIMARY KEY (`id_joueur`,`id_cadavre`),
+  ADD KEY `id_cadavre` (`id_cadavre`);
+  ADD KEY `id_joueur` (`id_joueur`);
+
