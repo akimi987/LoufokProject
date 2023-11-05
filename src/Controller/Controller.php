@@ -53,7 +53,7 @@ class Controller
      */
     public function isAjaxRequest(): bool
     {
-        $headers =getallheaders();
+        $headers = getallheaders();
 
         return isset($headers['X-Requested-With']) && $headers['X-Requested-With'] === 'XMLHttpRequest';
     }

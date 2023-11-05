@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInita81a928746b24ae08443ae33b17d9882
+class ComposerStaticInit46a623280eff8cee95d278d0943660cf
 {
     public static $files = array (
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
@@ -26,10 +26,16 @@ class ComposerStaticInita81a928746b24ae08443ae33b17d9882
         array (
             'Symfony\\Polyfill\\Mbstring\\' => 26,
             'Symfony\\Polyfill\\Ctype\\' => 23,
+            'Svg\\' => 4,
+            'Sabberworm\\CSS\\' => 15,
         ),
         'P' => 
         array (
             'Psr\\Log\\' => 8,
+        ),
+        'M' => 
+        array (
+            'Masterminds\\' => 12,
         ),
         'K' => 
         array (
@@ -37,7 +43,12 @@ class ComposerStaticInita81a928746b24ae08443ae33b17d9882
         ),
         'F' => 
         array (
+            'FontLib\\' => 8,
             'FastRoute\\' => 10,
+        ),
+        'D' => 
+        array (
+            'Dompdf\\' => 7,
         ),
         'A' => 
         array (
@@ -62,17 +73,37 @@ class ComposerStaticInita81a928746b24ae08443ae33b17d9882
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
         ),
+        'Svg\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phenx/php-svg-lib/src/Svg',
+        ),
+        'Sabberworm\\CSS\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/sabberworm/php-css-parser/src',
+        ),
         'Psr\\Log\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
+        ),
+        'Masterminds\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/masterminds/html5/src',
         ),
         'Katzgrau\\KLogger\\' => 
         array (
             0 => __DIR__ . '/..' . '/katzgrau/klogger/src',
         ),
+        'FontLib\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phenx/php-font-lib/src/FontLib',
+        ),
         'FastRoute\\' => 
         array (
             0 => __DIR__ . '/..' . '/nikic/fast-route/src',
+        ),
+        'Dompdf\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/dompdf/dompdf/src',
         ),
         'App\\' => 
         array (
@@ -82,15 +113,16 @@ class ComposerStaticInita81a928746b24ae08443ae33b17d9882
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'Dompdf\\Cpdf' => __DIR__ . '/..' . '/dompdf/dompdf/lib/Cpdf.php',
         'Katzgrau\\KLogger\\Logger' => __DIR__ . '/..' . '/katzgrau/klogger/src/Logger.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInita81a928746b24ae08443ae33b17d9882::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInita81a928746b24ae08443ae33b17d9882::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInita81a928746b24ae08443ae33b17d9882::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit46a623280eff8cee95d278d0943660cf::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit46a623280eff8cee95d278d0943660cf::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit46a623280eff8cee95d278d0943660cf::$classMap;
 
         }, null, ClassLoader::class);
     }

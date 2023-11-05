@@ -63,7 +63,7 @@ class Model
      * @param  integer  $id identifiant
      * @return array
      */
-    public function find(int $id): ?array
+    public function find(int | string $id): ?array
     {
         $sql = "SELECT * FROM `{$this->tableName}` WHERE id = :id";
         $sth = $this->query($sql, [':id' => $id]);
@@ -163,7 +163,7 @@ class Model
      * @param  array  $datas  tableau associatif des données à modifier.
      * @return bool
      */
-    public function update(int $id, array $datas): bool
+    public function update(int | string $id, array $datas): bool
     {
         $sql = 'UPDATE `' . $this->tableName . '` SET ';
         foreach (array_keys($datas) as $k) {
@@ -189,7 +189,7 @@ class Model
      * @param  integer  $id identifiant
      * @return int|boolean
      */
-    public function delete(int $id): int
+    public function delete(int | string $id): int
     {
         $sql = "DELETE FROM `{$this->tableName}` WHERE id = :id";
         $sth = $this->query($sql, [':id' => $id]);

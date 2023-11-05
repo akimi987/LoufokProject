@@ -1,31 +1,27 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 /*
 -------------------------------------------------------------------------------
 les routes
 -------------------------------------------------------------------------------
  */
 
-//return [
+return [
 
-  // accueil et affichage pour les avatars
- // ['GET', '/', 'avatar@index'],
-  //['GET', '/list', 'avatar@index'],
+  ['GET', '/', 'connexion@index'],
+  ['POST', '/connexion', 'connexion@index'],
+  ['GET', '/disconnect', 'connexion@disconnect', 'disconnect'],
 
-  // afficher le formulaire d'ajouter un nouvel avatar
-  //['GET', '/avatar/ajouter', 'avatar@add'],
-  // enregistrer les données soumises d'un nouvel avatar
-  //['POST', '/avatar/ajouter', 'avatar@save'],
+/*   ['GET', '/etudiant/{id}', 'etudiant@index'],
+  ['GET', '/etudiant/delete/{idEntreprise}/{idEtudiant}', 'etudiant@delete'],
+  ['GET', '/etudiant/add/{idEntreprise}/{idEtudiant}', 'etudiant@add'],
+  ['GET', '/etudiant/{id:\d+}/profil', 'etudiant@profil'],
 
-  // afficher le formulaire d'édition un nouvel existant
-  // à compléter ...
+  ['GET', '/responsable/{id:\d+}/edit', 'responsable@edit'],
+  ['POST', '/responsable/{id:\d+}/edit', 'responsable@update'],
+  ['GET', '/responsable/{id:\d+}/profil', 'responsable@profil'],
+  ['GET', '/responsable/{id}', 'responsable@index'],
+  ['GET', '/generate-pdf', 'responsable@generatePDFAction', 'generate_pdf'], */
 
-  // enregistrer les données soumises d'un avatar existant
-  // à compléter ...
-
-  // effacer un avatar
-  // à compléter ...
-  //['GET', '/avatar/effacer/{id:\d+}', 'avatar@delete'],
-
-//];
+];
