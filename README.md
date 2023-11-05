@@ -1,12 +1,10 @@
-# Application Stage dating
+# Application Loufok
 
-## SAE MMI5 : sprint
+## SAE MMI5 : 
 
-_Par Théo Martin, Anthonin Murail, Rémi Peautre, Said Doga_
+_Par Saidouna-Kadre DOGA_
 
 <img src="./public/assets/image/logo.svg" alt="logo stage dating 'SD'"/>
-
-Cette application a été créée pour faciliter l'organisation des Stage Dating de l'université d'Angoulême dans le cadre d'un projet universitaire.
 
 ## Technologies utilisées :
 
@@ -21,8 +19,7 @@ Cette application a été créée pour faciliter l'organisation des Stage Dating
 ## Fonctionalitées développées :
 
 - Se connecter
-  - en tant qu'étudiant
-  - en tant que responsable de stage
-- Voir en tant que responsable de stage quels sont les étudiants qui ne sont pas inscrits à un rendez-vous
-- Voir en tant qu'étudiant quel entreprise propose des offres de stage qui pourrait les intérésser.
-- Vois en tant qu'étudiant à quels rendez vous on s'est inscrit
+  - en tant que joueur
+  - en tant qu'administateur
+- Démarrer en tant qu'admin un jeu de cadavre exquis
+- Contribuer en tant que joueur à un cadavre exquis
