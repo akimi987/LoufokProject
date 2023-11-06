@@ -2,28 +2,30 @@
 
 namespace App\Controller;
 
-use App\Model\Cadavre;
+session_start();
+
+use App\Model\CadavreModel;
 use App\Model\Joueur;
 
-class JoueurController
+class JoueurController extends Controller
 {
     public function index($idGamer)
     {
-        $leCadavreEnCours = Cadavre::getInstance()->findCurrent();
+        $leCadavreEnCours = CadavreModel::getInstance()->findCurrent();
         $leJoueur = Joueur::getInstance()->find($idGamer);
 
         $affichageFormulaire = true;
         $lesContributions = [];
 
         if ($leCadavreEnCours !== null) {
-            $laContributionAleatoire = Joueur::getInstance()->findContributionRandom($leCadavreEnCours["id_cadavre"], $idGamer);
-            $saContribution = Joueur::findHisContribution($leCadavreEnCours["id_cadavre"], $idGamer);
+            $laContributionAleatoire = Joueur::getInstance()->findContributionRandom($leCadavreEnCours->getId(), $idGamer);
+            $saContribution = Joueur::getInstance()->findHisContribution($leCadavreEnCours->getId(), $idGamer);
 
             if ($saContribution !== null) {
-                $lesContributions = Cadavre::getInstance()->findAllContributionsHideExcept($laContributionAleatoire["id_contribution"], $saContribution["id_contribution"]);
+                $lesContributions = CadavreModel::getInstance()->findAllContributionsHideExcept($laContributionAleatoire->getId(), $saContribution->getId());
                 $affichageFormulaire = false;
             } else {
-                $lesContributions = Cadavre::getInstance()->findAllContributionsHideExcept($laContributionAleatoire["id_contribution"]);
+                $lesContributions = CadavreModel::getInstance()->findAllContributionsHideExcept($laContributionAleatoire->getId());
             }
         }
 
@@ -33,24 +35,50 @@ class JoueurController
         $this->display($vue . '.html.twig', $variables);
     }
 
-    public function addContribution($idGamer, $idCadavre)
+    /*     public function addContribution($idGamer, $idCadavre)
     {
-    // Récupérer le joueur
-    $leJoueur = Joueur::getInstance()->find($idGamer);
+        // Récupérer le joueur
+        $leJoueur = Joueur::getInstance()->find($idGamer);
 
-    // Récupérer le cadavre en cours
-    $leCadavreEnCours = Cadavre::getInstance()->findCurrent();
+        // Récupérer le cadavre en cours
+        $leCadavreEnCours = CadavreModel::getInstance()->findCurrent();
 
-    if ($leCadavreEnCours !== null) {
-        if ($leCadavreEnCours["id_cadavre"] === $idCadavre) {
-            $erreur = Cadavre::getInstance()->addContribution($texte, $idGamer, $idCadavre);
-            if ($erreur) {
-                $this->display('ErrorAddContribution.html.twig', ['message' => 'Erreur lors de l\'ajout de la contribution']);
-            } 
+        if ($leCadavreEnCours !== null) {
+            if ($leCadavreEnCours->getId() === $idCadavre) {
+                // Récupérer le texte de la contribution depuis le formulaire
+                $texte = $_POST['texte'];
+
+                // On démarre une transaction
+                self::$dbh->beginTransaction();
+
+                try {
+                    if (strlen($texte) < 50 || strlen($texte) > 280) {
+                        throw new \Exception('La contribution doit contenir entre 50 et 280 caractères');
+                    }
+                    if ($leCadavreEnCours->getNbContributions() >= $leCadavreEnCours->getNbContributionsMax()) {
+                        throw new \Exception('Le nombre maximal de contributions pour ce cadavre a été atteint');
+                    }
+
+                    $erreur = CadavreModel::getInstance()->addContribution($texte, $idGamer, $idCadavre);
+
+                    if ($erreur) {
+                        throw new \Exception('Erreur lors de l\'ajout de la contribution');
+                    }
+
+                    // On valide la transaction
+                    self::$dbh->commit();
+
+                    $this->display('Success.html.twig', ['message' => 'Contribution ajoutée avec succès']);
+                } catch (\Exception $e) {
+                    // En cas d'erreur, on annule la transaction
+                    self::$dbh->rollBack();
+                    $this->display('ErrorAddContribution.html.twig', ['message' => $e->getMessage()]);
+                }
+            } else {
+                $this->display('ErrorAddContribution.html.twig', ['message' => 'Le cadavre spécifié ne correspond pas au cadavre en cours']);
+            }
         } else {
-            $this->display('ErrorAddContribution.html.twig', ['message' => 'Le cadavre spécifié ne correspond pas au cadavre en cours']);
+            $this->display('ErrorAddContribution.html.twig', ['message' => 'Aucun cadavre en cours']);
         }
-    } else {
-        $this->display('ErrorAddContribution.html.twig', ['message' => 'Aucun cadavre en cours']);
-    }
-}}
+    } */
+}

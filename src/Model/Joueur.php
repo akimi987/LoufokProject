@@ -4,9 +4,9 @@ namespace App\Model;
 
 class Joueur extends Model
 {
-    protected $tableName = 'joueur';
-    protected $tableContributionName = 'contribution';
-    protected $tableContributionAleatoire = 'soumettre';
+    protected $tableName = APP_TABLE_PREFIX . 'joueur';
+    protected $tableContributionName =  APP_TABLE_PREFIX . 'contribution';
+    protected $tableContributionAleatoire = APP_TABLE_PREFIX . 'soumettre';
 
     protected static $instance;
 
@@ -22,7 +22,11 @@ class Joueur extends Model
     public function findContributionRandom($idCadavre, $idGamer)
     {
         $sql = "SELECT * FROM `$this->tableContributionAleatoire` WHERE id_cadavre = :idCadavre AND id_joueur = :idGamer";
-        $sth = $this->query($sql, [':idCadavre' => $idCadavre, ':idGamer' => $idGamer]);
+
+        $sth = self::$dbh->prepare($sql);
+        $sth->bindParam(':idCadavre', $idCadavre);
+        $sth->bindParam(':idGamer', $idGamer);
+        $sth->execute();
 
         return $sth->fetch();
     }
@@ -30,7 +34,11 @@ class Joueur extends Model
     public function findHisContribution($idCadavre, $idGamer)
     {
         $sql = "SELECT * FROM `$this->tableContributionName` WHERE id_cadavre = :idCadavre AND id_joueur = :idGamer";
-        $sth = $this->query($sql, [':idCadavre' => $idCadavre, ':idGamer' => $idGamer]);
+
+        $sth = self::$dbh->prepare($sql);
+        $sth->bindParam(':idCadavre', $idCadavre);
+        $sth->bindParam(':idGamer', $idGamer);
+        $sth->execute();
 
         return $sth->fetch();
     }

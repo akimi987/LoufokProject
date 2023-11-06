@@ -1,0 +1,62 @@
+
+{% extends 'layout.html.twig' %}
+{% block title %}User
+	{{ parent() }}
+{% endblock %}
+
+{% block content %}
+
+<link href="../assets/styles/joueur.css" rel="stylesheet" type="text/css"/>
+	<header>
+		<div class="userHeader">
+			<p>
+				Bonjour,
+				<span class="user">{{ joueur.nom_plume }}</span>
+			</p>
+			<nav class="userHeader__nav">
+				<ul>
+					<li><a aria-label="Déconnexion de votre espace"href="{{ url('/disconnect') }}"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.413-.588T3 19V5q0-.825.588-1.413T5 3h7v2H5v14h7v2H5Zm11-4l-1.375-1.45l2.55-2.55H9v-2h8.175l-2.55-2.55L16 7l5 5l-5 5Z"/></svg></a></li>
+					<li><a aria-label="Les paramètres de votre compte"href="{{url('/joueur/'~joueur.id_joueur~'/profil')}}"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24"><path fill="currentColor" d="M12 12q-1.65 0-2.825-1.175T8 8q0-1.65 1.175-2.825T12 4q1.65 0 2.825 1.175T16 8q0 1.65-1.175 2.825T12 12Zm-8 8v-2.8q0-.85.438-1.563T5.6 14.55q1.55-.775 3.15-1.163T12 13q1.65 0 3.25.388t3.15 1.162q.725.375 1.163 1.088T20 17.2V20H4Zm2-2h12v-.8q0-.275-.138-.5t-.362-.35q-1.35-.675-2.725-1.012T12 15q-1.4 0-2.775.338T6.5 16.35q-.225.125-.363.35T6 17.2v.8Zm6-8q.825 0 1.413-.588T14 8q0-.825-.588-1.413T12 6q-.825 0-1.413.588T10 8q0 .825.588 1.413T12 10Zm0-2Zm0 10Z"/></svg></a></li>
+				</ul>
+			</nav>
+		</div>
+	</header>
+
+    <section>
+
+    <div class="container">
+    
+        <div class="contributions">
+            {% for contribution in contributions %}
+                <div class="contribution masque">{{ contribution.texte }}</div>
+            {% endfor %}
+
+            <div class="contribution">{{ contributionAleatoire.texte }}</div>
+
+            <div class="contribution">{{ contributionJoueur.texte }}</div>
+        </div>
+
+        <textarea id="texte-contribution" rows="4" placeholder="Saisissez votre contribution "></textarea>
+        <div id="caractere-compteur">0 / 280</div>
+        <button id="ajouter-contribution" disabled>Ajouter la contribution</button>
+    </div>
+    </section>
+
+    <script>
+        const textarea = document.getElementById("texte-contribution");
+        const compteur = document.getElementById("caractere-compteur");
+        const bouton = document.getElementById("ajouter-contribution");
+
+        textarea.addEventListener("input", () => {
+            const caracteres = textarea.value.length;
+            compteur.textContent = `Caractères : ${caracteres} / 280`;
+
+            if (caracteres > 0 && caracteres <= 280) {
+                bouton.removeAttribute("disabled");
+            } else {
+                bouton.setAttribute("disabled", "disabled");
+            }
+        });
+    </script>
+{% endblock %}
+
