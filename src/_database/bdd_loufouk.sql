@@ -41,16 +41,16 @@ CREATE TABLE Cadavre (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE Contribution (
-   id_contribution INT AUTO_INCREMENT,
-   texte_contribution VARCHAR(280) NOT NULL,
-   date_soumission DATETIME NOT NULL,
-   ordre_soumission VARCHAR(50) NOT NULL,
-   id_administrateur INT,
-   id_cadavre INT NOT NULL,
-   PRIMARY KEY (id_contribution),
-   FOREIGN KEY (id_administrateur) REFERENCES Administrateur(id_administrateur),
-   FOREIGN KEY (id_cadavre) REFERENCES Cadavre(id_cadavre)
+    id_contribution INT AUTO_INCREMENT PRIMARY KEY,
+    texte_contribution TEXT NOT NULL,
+    date_soumission DATETIME NOT NULL,
+    ordre_soumission INT NOT NULL,
+    id_administrateur INT,
+    id_cadavre INT NOT NULL,
+    FOREIGN KEY (id_administrateur) REFERENCES Administrateur(id_administrateur),
+    FOREIGN KEY (id_cadavre) REFERENCES Cadavre(id_cadavre)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 
 CREATE TABLE Soumettre (
    id_joueur INT,
@@ -60,3 +60,43 @@ CREATE TABLE Soumettre (
    FOREIGN KEY (id_joueur) REFERENCES Joueur(id_joueur),
    FOREIGN KEY (id_cadavre) REFERENCES Cadavre(id_cadavre)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+--Triggers pour gérer nombre maximal de contrib et aussi la période de contribution -- 
+
+CREATE TRIGGER avant_insertion_contribution
+BEFORE INSERT ON Contribution
+FOR EACH ROW
+BEGIN
+    DECLARE current_contributions INT;
+    DECLARE max_contributions INT;
+    DECLARE end_date DATETIME;
+    
+    SELECT COUNT(*) INTO current_contributions FROM Contribution WHERE id_cadavre = NEW.id_cadavre;
+    SELECT nb_contributions INTO max_contributions FROM Cadavre WHERE id = NEW.id_cadavre;
+    SELECT 	date_fin_cadavre INTO end_date FROM Cadavre WHERE id = NEW.id_cadavre;
+    
+    IF current_contributions >= max_contributions THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Le nombre maximal de contributions pour ce cadavre a été atteint';
+    END IF;
+    
+    IF NOW() > end_date THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'La période de dépôt des contributions est terminée';
+    END IF;
+END;
+
+-- Trigger longueur de texte ---
+
+
+CREATE TRIGGER longueurtexte_insertion_contribution
+BEFORE INSERT ON Contribution
+FOR EACH ROW
+BEGIN
+  IF LENGTH(NEW.texte_contribution) < 50 OR LENGTH(NEW.texte_contribution) > 280 THEN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'La longueur de texte_contribution doit être entre 50 et 280 caractères';
+  END IF;
+END;
+ ;

@@ -11,9 +11,12 @@ return [
 
   ['GET', '/', 'connexion@index'],
   ['POST', '/connexion', 'connexion@index'],
-  ['GET', '/disconnect', 'connexion@disconnect', 'disconnect'],
+  ['GET', '/disconnect', 'connexion@disconnect'],
 
-/*   ['GET', '/etudiant/{id}', 'etudiant@index'],
+  
+  ['GET', '/joeuur/{id}', 'joueur@index'],
+  ['GET', '/joueur/addContrib/{idGamer}/{idCadavre}', 'joueur@addContribution'],
+  /*   ['GET', '/etudiant/{id}', 'etudiant@index'],
   ['GET', '/etudiant/delete/{idEntreprise}/{idEtudiant}', 'etudiant@delete'],
   ['GET', '/etudiant/add/{idEntreprise}/{idEtudiant}', 'etudiant@add'],
   ['GET', '/etudiant/{id:\d+}/profil', 'etudiant@profil'],

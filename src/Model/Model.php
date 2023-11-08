@@ -218,4 +218,19 @@ class Model
             return self::$dbh->query($sql);
         }
     }
+
+    public function beginTransaction()
+    {
+        self::$dbh->beginTransaction();
+    }
+
+    public function commit()
+    {
+        self::$dbh->commit();
+    }
+
+    public function rollBack()
+    {
+        self::$dbh->rollBack();
+    }
 }
