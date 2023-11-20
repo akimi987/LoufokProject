@@ -4,8 +4,6 @@
 
 _Par Saidouna-Kadre DOGA_
 
-<img src="./public/assets/image/logo.svg" alt="logo stage dating 'SD'"/>
-
 ## Technologies utilisées :
 
 - Model View Controller
