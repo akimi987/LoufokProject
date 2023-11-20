@@ -1,0 +1,24 @@
+{% extends 'layout.html.twig' %}
+{% block title %}Inscription{{ parent() }}{% endblock %}
+{% block content %}
+    <body class="bg-gradient screen--wrapper">
+        <!-- Votre en-tête et logo ici -->
+        <link href="assets/styles/main.css" rel="stylesheet" type="text/css"/>
+
+        <section class="authForm color-white">
+            <h2 class="authForm--header">
+                Inscrivez-vous à
+                <br>
+                Cadavre exquis
+            </h2>
+            <form action="/inscription/register" method="POST">
+                <input type="text" name="nom_plume" placeholder="Nom de plume" required>
+                <input type="email" name="ad_mail_joueur" placeholder="Adresse e-mail" required>
+                <input type="password" name="mot_de_passe_joueur" placeholder="Mot de passe" required>
+                <input type="text" name="sexe" placeholder="Sexe" required>
+                <input type="date" name="ddn" placeholder="Date de naissance" required>
+                <input type="submit" value="S'inscrire">
+            </form>
+        </section>
+    </body>
+{% endblock %}

@@ -1,0 +1,96 @@
+{% extends 'layout.html.twig' %}
+{% block title %}Planifier un Cadavre{% endblock %}
+{% block content %}
+    <body>
+        <div class="form-container">
+            <form action="/administrateur/demarrerCadavre" method="POST" class="cadavre-form">
+                <style>
+                    body {
+                        background: linear-gradient(to right, #ff7e5f, #feb47b); 
+                        margin: 0;
+                        padding: 0;
+                        font-family: 'Arial', sans-serif;
+                    }
+
+                    .form-container {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        height: 100vh;
+                    }
+
+                    .cadavre-form {
+                        background-color: white;
+                        padding: 20px;
+                        border-radius: 10px;
+                        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                        width: 300px;
+                        transition: transform 0.3s ease-in-out;
+                    }
+
+                    .form-group {
+                        margin-bottom: 15px;
+                    }
+
+                    .form-group label {
+                        display: block;
+                        font-size: 14px;
+                        margin-bottom: 5px;
+                    }
+
+                    .form-group input,
+                    .form-group textarea {
+                        width: 100%;
+                        padding: 8px;
+                        border: 1px solid #ccc;
+                        border-radius: 5px;
+                    }
+
+                   .submit-btn {
+                        background-color: #ff7e5f;
+                        color: white;
+                        padding: 10px;
+                        border: none;
+                        border-radius: 5px;
+                        cursor: pointer;
+                        font-size: 16px;
+                        transition: background-color 0.3s ease-in-out;
+                        width: 100%; 
+                    }
+
+
+                    .submit-btn:hover {
+                        background-color: #cc604c; 
+                    }
+                </style>
+
+                <div class="form-group">
+                    <label for="titre">Titre du Cadavre:</label>
+                    <input type="text" id="titre" name="titre" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="dateDebut">Date de Début:</label>
+                    <input type="datetime-local" id="dateDebut" name="dateDebut" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="dateFin">Date de Fin:</label>
+                    <input type="datetime-local" id="dateFin" name="dateFin" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="nbContributions">Nombre Max de Contributions:</label>
+                    <input type="number" id="nbContributions" name="nbContributions" min="2" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="premiereContribution">Première Contribution:</label>
+                    <textarea id="premiereContribution" name="premiereContribution" rows="4" required></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn">Planifier</button>
+            </form>
+        </div>
+    </body>
+{% endblock %}

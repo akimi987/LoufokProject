@@ -34,5 +34,12 @@ class Connexion extends Model
         $sth->execute();
 
         return $sth->fetch();
+
+        /*         $user = $sth->fetch();
+        var_dump($user);
+        if ($user && password_verify($password, $user['mot_de_passe'])) {
+            return $user;
+        }
+        return null; */
     }
 }
