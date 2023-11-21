@@ -8,6 +8,8 @@ session_start();
 
 use App\Helper\HTTP;
 use App\Model\CadavreModel;
+//use Cadavre;
+
 
 class AdministrateurController extends Controller
 {
@@ -20,17 +22,11 @@ class AdministrateurController extends Controller
             if ($role === 'joueur') {
                 HTTP::redirect("/joueur/{$id}");
             } else {
-                $id = $_SESSION['user_id'];
-                $leCadavreEnCours = CadavreModel::getInstance()->findCurrent();
-                if ($leCadavreEnCours) {
-                    $cadavreID = CadavreModel::getInstance()->getCadavreEnCoursId();
-                    $cadavreDetails = CadavreModel::getInstance()->getInfos($cadavreID);
-                    $contributions = CadavreModel::getInstance()->findAllContributions($id);
+                $cadavreEnCours = CadavreModel::getInstance()->findCurrent();
 
-                    $this->display('administrateur/details.html.twig', [
-                        'cadavreDetails' => $cadavreDetails,
-                        'contributions' => $contributions,
-                    ]);
+                if ($cadavreEnCours) {
+                    $variables = ['cadavreEnCours' => $cadavreEnCours];
+                    $this->display('administrateur/details.html.twig', $variables);
                 } else {
                     $this->display('administrateur/creationCadavre.html.twig');
                 }
@@ -39,19 +35,22 @@ class AdministrateurController extends Controller
             HTTP::redirect('/');
         }
     }
-
-    public function demarrerNouveauCadavre()
+    public function demarrerCadavre()
     {
-
-        $cadavreTitre = $_POST['titre'];
-        $premiereContribution = $_POST['premiereContribution'];
+        $titre = $_POST['titre'];
         $dateDebut = $_POST['dateDebut'];
         $dateFin = $_POST['dateFin'];
-        $maxContributions = $_POST['nbContributions'];
+        $nbContributions = $_POST['nbContributions'];
+        $premiereContributionTexte = $_POST['premiereContribution'];
 
-        $idAdmin = $_SESSION['user_id'];
-        $cadavreID = CadavreModel::getInstance()->demarrerCadavre($cadavreTitre, $premiereContribution, $dateDebut, $dateFin, $maxContributions, $idAdmin);
-        HTTP::redirect("/administrateur/details/{$cadavreID}");
-        exit();
+        $id = $_SESSION['user_id'];
+        $cadavreId = CadavreModel::getInstance()->createCadavre($titre, $dateDebut, $dateFin, $nbContributions);
+
+        if ($cadavreId) {
+            CadavreModel::getInstance()->addContribution($premiereContributionTexte, $cadavreId, $id);
+            $this->display('administrateur/details.html.twig', ['cadavreId' => $cadavreId]);
+        } else {
+            $this->display('administrateur/error.html.twig', ['error' => 'Erreur lors de la création du cadavre. Veuillez réessayer.']);
+        }
     }
 }

@@ -18,7 +18,7 @@ return [
 
 
   ['GET', '/administrateur/{id}', 'administrateur@index'],
-  ['POST', '/administrateur/demarrerNouveauCadavre', 'administrateur@demarrerNouveauCadavre'],
+  ['POST', '/administrateur/demarrerNouveauCadavre', 'administrateur@demarrerCadavre'],
 
 
 

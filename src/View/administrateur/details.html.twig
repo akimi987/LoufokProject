@@ -1,15 +1,17 @@
 {% extends 'layout.html.twig' %}
-{% block title %}Détails du Cadavre{{ parent() }}{% endblock %}
+{% block title %}Création de Cadavre
+	{{ parent() }}
+{% endblock %}
+
 {% block content %}
-    <h2>Détails du Cadavre</h2>
-    <p>Titre: {{ cadavreDetails.titre_cadavre }}</p>
-    <p>Date de Début: {{ cadavreDetails.date_debut_cadavre|date('Y-m-d H:i:s') }}</p>
-    <p>Date de Fin: {{ cadavreDetails.date_fin_cadavre|date('Y-m-d H:i:s') }}</p>
-    <p>Nombre Max de Contributions: {{ cadavreDetails.nb_contributions }}</p>
-    <p>Nombre de Contributions Actuel: {{ cadavreDetails.nb_contributions_actuel }}</p>
-    
-    <h3>Contributions</h3>
-    {% for contribution in contributions %}
-        <p>{{ contribution.texte_contribution }}</p>
-    {% endfor %}
+    <h1>Cadavre en Cours</h1>   
+    <section>
+        <strong>Titre du cadavre:</strong> {{ cadavreEnCours.titre }}<br>
+        <strong>Date de début:</strong> {{ cadavreEnCours.date_debut_cadavre|date('Y-m-d H:i:s') }}<br>
+        <strong>Date de fin:</strong> {{ cadavreEnCours.date_fin_cadavre|date('Y-m-d H:i:s') }}<br>
+        <strong>Nombre Max de Contributions :</strong> {{ cadavreEnCours.nbContributionsMax }}</p>
+        <h1>Détails du Cadavre en Cours</h1>
+        <a href="/">Retour à l'accueil</a>
+
+    </section>
 {% endblock %}
