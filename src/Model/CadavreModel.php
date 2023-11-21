@@ -18,17 +18,17 @@ class CadavreModel extends Model
 
     public function demarrerCadavre($cadavreTitre, $premiereContribution, $dateDebut, $dateFin, $maxContributions, $idAdmin)
     {
-        if ($this->isCadavreEnCours(1)) {
+/*         if ($this->isCadavreEnCours(1)) {
         }
         if ($maxContributions <= 1) {
         }
         if (strlen(($premiereContribution) < 50 || strlen($premiereContribution) > 280)) {
-        }
+        } */
         $sql = "INSERT INTO {$this->tableName} (titre_cadavre, date_debut_cadavre, date_fin_cadavre, nb_contributions) VALUES (:titre, :date_Debut, :date_Fin, :max_contributions)";
         $sth = self::$dbh->prepare($sql);
         $sth->bindParam(':titre', $cadavreTitre);
-        $sth->bindParam(':dateDebut', $dateDebut);
-        $sth->bindParam(':dateFin', $dateFin);
+        $sth->bindParam(':date_Debut', $dateDebut);
+        $sth->bindParam(':date_Fin', $dateFin);
         $sth->bindParam(':max_contributions', $maxContributions);
         $sth->execute();
         $cadavreId = self::$dbh->lastInsertId();
@@ -69,10 +69,11 @@ class CadavreModel extends Model
         $nombreContributions = $sth->fetchColumn();
         return $nombreContributions + 1;
     }
-    private function getLastInsertedId()
+    public function getLastInsertedId()
     {
         return $this->dbh->lastInsertId();
     }
+
     public function findAllContributionsHideExcept($idCadavre, $idContrib1, $idContrib2)
     {
         $sql = "SELECT * FROM {$this->tableContributionName} WHERE id_cadavre = :idCadavre AND id_contribution != :idContrib1 AND id_contribution != :idContrib2";

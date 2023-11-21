@@ -24,6 +24,7 @@ return [
 
 
 
+
   //['GET', '/joueur/{idGamer}', 'joueur@index'],
   //['GET', '/joueur/addContribution/{idGamer}/{idCadavre}', 'joueur@addContribution'],
 

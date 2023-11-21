@@ -40,7 +40,7 @@ class AdministrateurController extends Controller
         }
     }
 
-    public function demarrerNouveauCadavre($cadavreTitre, $premiereContribution, $dateDebut, $dateFin, $maxContributions)
+    public function demarrerNouveauCadavre()
     {
 
         $cadavreTitre = $_POST['titre'];
@@ -49,10 +49,9 @@ class AdministrateurController extends Controller
         $dateFin = $_POST['dateFin'];
         $maxContributions = $_POST['nbContributions'];
 
-        $cadavreModel = new CadavreModel();
         $idAdmin = $_SESSION['user_id'];
-        $cadavreModel->demarrerCadavre($cadavreTitre, $premiereContribution, $dateDebut, $dateFin, $maxContributions, $idAdmin);
-        HTTP::redirect('administrateur/details/{$cadavreId}');
+        $cadavreID = CadavreModel::getInstance()->demarrerCadavre($cadavreTitre, $premiereContribution, $dateDebut, $dateFin, $maxContributions, $idAdmin);
+        HTTP::redirect("/administrateur/details/{$cadavreID}");
         exit();
     }
 }
