@@ -15,6 +15,11 @@ class CadavreValidation
     public function validate(array $cadavreData, string $premiereContribution): array
     {
         $errors = [];
+
+        if (!$this->validateStartDate($cadavreData['date_debut_cadavre'])) {
+            $errors[] = 'La date de début doit être supérieure ou égale à aujourd\'hui.';
+        }
+
         if (!$this->validateTitleUniqueness($cadavreData['titre_cadavre'])) {
             $errors[] = 'Le titre du cadavre doit être unique.';
         }
@@ -60,5 +65,12 @@ class CadavreValidation
     {
         // Vérifier qu'aucun cadavre n'a une période qui se chevauche
         return !$this->cadavreModel->hasOverlap($startDate, $endDate);
+    }
+    public function validateStartDate(string $startDate): bool
+    {
+        $aujourdhui = date('Y-m-d');
+        $startDateWithoutTime = date('Y-m-d', strtotime($startDate));
+
+        return ($startDateWithoutTime >= $aujourdhui);
     }
 }

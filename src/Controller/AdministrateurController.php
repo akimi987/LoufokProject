@@ -20,7 +20,13 @@ class AdministrateurController extends Controller
             if ($role === 'joueur') {
                 HTTP::redirect("/joueur/{$id}");
             } else {
-                $this->display('administrateur/creationCadavre.html.twig');
+                $cadavreEnCours = CadavreModel::getInstance()->getCadavreEnCours();
+                $this->display(
+                    'administrateur/creationCadavre.html.twig',
+                    [
+                        'cadavreEnCours' => $cadavreEnCours,
+                    ]
+                );
             }
         } else {
             HTTP::redirect('/');

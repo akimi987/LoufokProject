@@ -15,8 +15,6 @@ class CadavreModel extends Model
         }
         return self::$instance;
     }
-
-    // ----------------------------------------------------------------------------------
     public function createCadavre(array $cadavreData, string $premiereContribution, int $idAdministrateur): ?int
     {
         $validationErrors = $this->validateCadavreData($cadavreData);
@@ -40,8 +38,6 @@ class CadavreModel extends Model
             return null;
         }
     }
-
-    //-----------------------------------------------------------------------------------
     public function addContribution($texte, $idCadavre, $idGamer)
     {
         $ordreSoumission = $this->calculerOrdreSoumission($idCadavre);
@@ -71,10 +67,6 @@ class CadavreModel extends Model
 
         return $sth->fetch();
     }
-
-
-
-
     private function calculerOrdreSoumission($idCadavre)
     {
         $sql = "SELECT COUNT(*) FROM {$this->tableContributionName} WHERE id_cadavre = :idCadavre";
@@ -137,10 +129,6 @@ class CadavreModel extends Model
         $sth->bindParam(':id', $id);
         $sth->execute();
 
-        $cadavreInfos = $sth->fetch();
-
-        var_dump($cadavreInfos);
-
-        return $cadavreInfos;
+        return $sth->fetch();
     }
 }
