@@ -1,9 +1,6 @@
 body {
-    background: rgb(124, 70, 70);
-    background: linear-gradient(315deg,
-            rgb(138, 8, 8) 12%,
-            rgb(139, 106, 109) 67%,
-            rgb(233, 194, 194) 100%);
+    background: rgb(129, 201, 195);
+    background: linear-gradient(to bottom, #4a8594, #92FE9D);
 }
 
 .form-container {
