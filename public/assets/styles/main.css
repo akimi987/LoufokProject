@@ -6,6 +6,7 @@
 @import "blocs/profil.css";
 @import "blocs/register.css";
 @import "blocs/createcad.css";
+@import "blocs/calend.css";
 
 * {
   box-sizing: border-box;
@@ -35,7 +36,7 @@ b {
   font-weight: 600;
 }
 
-/* A MODIF car perfectible */
+
 .bg-gradient {
   background: rgb(124, 70, 70);
   background: linear-gradient(315deg,

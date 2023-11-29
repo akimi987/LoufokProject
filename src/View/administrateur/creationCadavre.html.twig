@@ -1,96 +1,79 @@
 {% extends 'layout.html.twig' %}
 {% block title %}Planifier un Cadavre{% endblock %}
 {% block content %}
-    <body>
-        <div class="form-container">
+<link href="../assets/styles/main.css" rel="stylesheet" type="text/css" />
+<div class="kh-gradient kh">
+    <header>
+        <div class="logo">
+            <img src="/path/to/your/logo.png" alt="Logo">
+        </div>
+        <div>
+            <a
+              href="{{ url('/disconnect') }}"
+              aria-label="Déconnexion de votre espace"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fill="currentColor"
+                  d="M5 21q-.825 0-1.413-.588T3 19V5q0-.825.588-1.413T5 3h7v2H5v14h7v2H5Zm11-4l-1.375-1.45l2.55-2.55H9v-2h8.175l-2.55-2.55L16 7l5 5l-5 5Z"
+                />
+              </svg>
+            </a>
+        </div>
+    </header>
+    <section class="form-container">
             <form action="/administrateur/demarrerCadavre" method="POST" class="cadavre-form">
-                <style>
-                    body {
-                        background: linear-gradient(to right,#880000, #550000); 
-                        margin: 0;
-                        padding: 0;
-                        font-family: 'Arial', sans-serif;
-                    }
-
-                    .form-container {
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        height: 100vh;
-                    }
-
-                    .cadavre-form {
-                        background-color: white;
-                        padding: 20px;
-                        border-radius: 10px;
-                        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                        width: 300px;
-                        transition: transform 0.3s ease-in-out;
-                    }
-
-                    .form-group {
-                        margin-bottom: 15px;
-                    }
-
-                    .form-group label {
-                        display: block;
-                        font-size: 14px;
-                        margin-bottom: 5px;
-                    }
-
-                    .form-group input,
-                    .form-group textarea {
-                        width: 100%;
-                        padding: 8px;
-                        border: 1px solid #ccc;
-                        border-radius: 5px;
-                    }
-
-                   .submit-btn {
-                        background-color: #ff7e5f;
-                        color: white;
-                        padding: 10px;
-                        border: none;
-                        border-radius: 5px;
-                        cursor: pointer;
-                        font-size: 16px;
-                        transition: background-color 0.3s ease-in-out;
-                        width: 100%; 
-                    }
-
-
-                    .submit-btn:hover {
-                        background-color: #cc604c; 
-                    }
-                </style>
 
                 <div class="form-group">
-                    <label for="titre">Titre du Cadavre:</label>
+                    <label for="titre">Titre du Cadavre</label>
                     <input type="text" id="titre" name="titre" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="dateDebut">Date de Début:</label>
+                    <label for="dateDebut">Date de Début</label>
                     <input type="datetime-local" id="dateDebut" name="dateDebut" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="dateFin">Date de Fin:</label>
+                    <label for="dateFin">Date de Fin</label>
                     <input type="datetime-local" id="dateFin" name="dateFin" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="nbContributions">Nombre Max de Contributions:</label>
-                    <input type="number" id="nbContributions" name="nbContributions" min="2" required>
+                    <label for="nbContributions">Nombre Max de Contributions</label>
+                    <input type="number" id="nbContributions" name="nbContributions" min="1" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="premiereContribution">Première Contribution:</label>
+                    <label for="premiereContribution">Première Contribution</label>
                     <textarea id="premiereContribution" name="premiereContribution" rows="4" required></textarea>
+                     <span id="charCount" style="position: relative; bottom: 0; right: 0;">0/280</span>
                 </div>
-
                 <button type="submit" class="submit-btn">Planifier</button>
             </form>
-        </div>
-    </body>
+    </section>
+  <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var contributionTextarea = document.getElementById("premiereContribution");
+            var charCountSpan = document.getElementById("charCount");
+            function updateCharCount() {
+                var charCount = contributionTextarea.value.length;
+                charCountSpan.textContent = charCount+ "/280";
+                if (charCount < 50 || charCount > 280) {
+                    charCountSpan.style.color = "red";
+                } else {
+                    charCountSpan.style.color = "green";
+                }
+            }
+            contributionTextarea.addEventListener("input", updateCharCount);
+            updateCharCount();
+        });
+  </script>
+{% endblock %}
+
 {% endblock %}

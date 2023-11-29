@@ -19,7 +19,6 @@ class Inscription extends Model
 
     public function registerUser($userData)
     {
-        // Hasher le mot de passe avant de l'insérer dans la base de données
         //$hashedPassword = password_hash($userData['mot_de_passe_joueur'], PASSWORD_DEFAULT);
         $sql = "INSERT INTO $this->tableName (nom_plume, ad_mail_joueur, mot_de_passe_joueur, sexe, ddn) 
                 VALUES (:nom_plume, :ad_mail_joueur, :mot_de_passe_joueur, :sexe, :ddn)";

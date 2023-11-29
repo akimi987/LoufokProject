@@ -15,144 +15,66 @@ class CadavreModel extends Model
         }
         return self::$instance;
     }
-    public function findCurrent()
+
+    // ----------------------------------------------------------------------------------
+    public function createCadavre(array $cadavreData, string $premiereContribution, int $idAdministrateur): ?int
+    {
+        $validationErrors = $this->validateCadavreData($cadavreData);
+
+        if (!empty($validationErrors)) {
+            return null;
+        }
+
+        try {
+            $cadavreId = parent::create($cadavreData);
+            Contribution::getInstance()->create([
+                'texte_contribution' => $premiereContribution,
+                'date_soumission' => date('Y-m-d H:i:s'),
+                'ordre_soumission' => 1,
+                'id_administrateur' => $idAdministrateur,
+                'id_cadavre' => $cadavreId,
+            ]);
+            return $cadavreId;
+        } catch (\Exception $e) {
+
+            return null;
+        }
+    }
+
+    //-----------------------------------------------------------------------------------
+    public function addContribution($texte, $idCadavre, $idGamer)
+    {
+        $ordreSoumission = $this->calculerOrdreSoumission($idCadavre);
+        $date = date('Y-m-d H:i:s');
+        Contribution::getInstance()->create([
+            'texte_contribution' => trim($_POST['premiereContribution']),
+            'date_soumission' => $date,
+            'ordre_soumission' => $ordreSoumission,
+            'id_joueur' => $idGamer,
+            'id_cadavre' => $idCadavre,
+        ]);
+    }
+
+    public function getCadavreEnCours()
     {
         $currentDate = date('Y-m-d H:i:s');
-        $sql = "SELECT * FROM {$this->tableName} WHERE date_debut_cadavre <= :currentDate AND date_fin_cadavre >= :currentDate";
+
+        $sql = "SELECT titre_cadavre, date_debut_cadavre, date_fin_cadavre, nb_contributions
+            FROM cadavre
+            WHERE date_fin_cadavre >= :currentDate
+            ORDER BY date_debut_cadavre ASC
+            LIMIT 1";
+
         $sth = self::$dbh->prepare($sql);
         $sth->bindParam(':currentDate', $currentDate);
         $sth->execute();
-        if ($sth && $sth->rowCount() > 0) {
-            return $sth->fetch();
-        }
 
-        return null;
+        return $sth->fetch();
     }
 
-    public function findAllContributions($idCadavre)
-    {
-        $sql = "SELECT * FROM {$this->tableContributionName} WHERE id_cadavre = :idCadavre";
 
-        $sth = self::$dbh->prepare($sql);
-        $sth->bindParam(':idCadavre', $idCadavre);
-        $sth->execute();
 
-        return $sth ? $sth->fetchAll() : [];
-    }
 
-    public function findAllContributionsHideExcept($idCadavre, $idContrib1, $idContrib2)
-    {
-        $sql = "SELECT * FROM {$this->tableContributionName} WHERE id_cadavre = :idCadavre AND id_contribution != :idContrib1 AND id_contribution != :idContrib2";
-        $sth = self::$dbh->prepare($sql);
-        $sth->bindParam(':idCadavre', $idCadavre);
-        $sth->bindParam(':idContrib1', $idContrib1);
-        $sth->bindParam(':idContrib1', $idContrib2);
-        $sth->execute();
-        return $sth ? $sth->fetchAll() : [];
-    }
-
-    public function findAllContributionHideExcept($idCadavre, $idContrib1)
-    {
-        $sql = "SELECT * FROM {$this->tableContributionName} WHERE id_cadavre = :idCadavre AND id_contribution != :idContrib1";
-        $sth = self::$dbh->prepare($sql);
-        $sth->bindParam(':idCadavre', $idCadavre);
-        $sth->bindParam(':idContrib1', $idContrib1);
-        $sth->execute();
-
-        return $sth ? $sth->fetchAll() : [];
-    }
-
-    public function addContribution($texte, $idCadavre, $idGamer)
-    {
-        self::$dbh->beginTransaction();
-        $ordreSoumission = $this->calculerOrdreSoumission($idCadavre);
-        try {
-            $sql = "INSERT INTO {$this->tableContributionName} (texte_contribution, date_soumission, ordre_soumission, id_administrateur, id_cadavre) VALUES (:texte, :dateSoumission, :ordreSoumission, :idAdmin, :idCadavre)";
-            $sth = self::$dbh->prepare($sql);
-            $sth->bindParam(':texte', $texte);
-            $sth->bindParam(':dateSoumission', date('Y-m-d H:i:s'));
-            $sth->bindParam(':ordreSoumission', $ordreSoumission);
-            $sth->bindParam(':idAdmin', $idGamer);
-            $sth->bindParam(':idCadavre', $idCadavre);
-
-            return $sth->execute();
-            if ($sth) {
-                self::$dbh->commit();
-                return true;
-            } else {
-                self::$dbh->rollBack();
-                return false;
-            }
-        } catch (\Exception $e) {
-            self::$dbh->rollBack();
-            throw $e;
-        }
-    }
-
-    public function createCadavre($titre, $dateDebut, $dateFin, $nbContributions)
-    {
-        self::$dbh->beginTransaction();
-
-        try {
-            if ($this->isPeriodOverlap($dateDebut, $dateFin)) {
-                throw new \Exception('La période chevauche une période existante.');
-            }
-            if ($this->isTitreExist($titre)) {
-                throw new \Exception('Un cadavre avec le même titre existe déjà.');
-            }
-
-            $sql = "INSERT INTO {$this->tableName} (titre_cadavre, date_debut_cadavre, date_fin_cadavre, nb_contributions) VALUES (:titre, :dateDebut, :dateFin, :nbContributions)";
-            $sth = self::$dbh->prepare($sql);
-            $sth->bindParam(':titre', $titre);
-            $sth->bindParam(':dateDebut', $dateDebut);
-            $sth->bindParam(':dateFin', $dateFin);
-            $sth->bindParam(':nbContributionsMax', $nbContributions);
-
-            if (!$sth->execute()) {
-                throw new \Exception('Erreur lors de l\'insertion du cadavre.');
-            }
-
-            $cadavreId = self::$dbh->lastInsertId();
-
-            self::$dbh->commit();
-
-            return $cadavreId;
-        } catch (\Exception $e) {
-            self::$dbh->rollBack();
-            throw $e;
-        }
-    }
-
-    private function isPeriodOverlap($dateDebut, $dateFin)
-    {
-        $sql = "SELECT * FROM {$this->tableName} WHERE (date_debut_cadavre BETWEEN :dateDebut AND :dateFin) OR (date_fin_cadavre BETWEEN :dateDebut AND :dateFin)";
-        $sth = self::$dbh->prepare($sql);
-        $sth->bindParam(':dateDebut', $dateDebut);
-        $sth->bindParam(':dateFin', $dateFin);
-        $sth->execute();
-
-        return $sth->rowCount() > 0;
-    }
-
-    private function isTitreExist($titre)
-    {
-        $sql = "SELECT * FROM {$this->tableName} WHERE titre_cadavre = :titre";
-        $sth = self::$dbh->prepare($sql);
-        $sth->bindParam(':titre', $titre);
-        $sth->execute();
-
-        return $sth->rowCount() > 0;
-    }
-
-    public function findById($cadavreId)
-    {
-        $sql = "SELECT * FROM {$this->tableName} WHERE id = :cadavreId";
-        $sth = self::$dbh->prepare($sql);
-        $sth->bindParam(':cadavreId', $cadavreId);
-        $sth->execute();
-
-        return $sth ? $sth->fetch() : null;
-    }
     private function calculerOrdreSoumission($idCadavre)
     {
         $sql = "SELECT COUNT(*) FROM {$this->tableContributionName} WHERE id_cadavre = :idCadavre";
@@ -162,5 +84,63 @@ class CadavreModel extends Model
 
         $nombreContributions = $sth->fetchColumn();
         return $nombreContributions + 1;
+    }
+    public function isTitleExists(string $title): bool
+    {
+        $sql = "SELECT COUNT(*) FROM {$this->tableName} WHERE titre_cadavre = :title";
+        $sth = self::$dbh->prepare($sql);
+        $sth->bindParam(':title', $title);
+        $sth->execute();
+
+        return ($sth->fetchColumn() > 0);
+    }
+
+    public function hasOverlap(string $startDate, string $endDate): bool
+    {
+        $sql = "SELECT COUNT(*) FROM {$this->tableName} 
+                WHERE (date_debut_cadavre < :endDate AND date_fin_cadavre > :startDate)
+                OR (date_debut_cadavre < :startDate AND date_fin_cadavre > :startDate)";
+
+        $sth = self::$dbh->prepare($sql);
+        $sth->bindParam(':startDate', $startDate);
+        $sth->bindParam(':endDate', $endDate);
+        $sth->execute();
+
+        return ($sth->fetchColumn() > 0);
+    }
+    public function validateCadavreData(array $cadavreData): array
+    {
+        $errors = [];
+        if (empty($cadavreData['titre_cadavre'])) {
+            $errors[] = "Le titre du cadavre est requis.";
+        } elseif ($this->isTitleExists($cadavreData['titre_cadavre'])) {
+            $errors[] = "Le titre du cadavre existe déjà. Choisissez un titre unique.";
+        }
+        $dateDebut = strtotime($cadavreData['date_debut_cadavre']);
+        $dateFin = strtotime($cadavreData['date_fin_cadavre']);
+
+        if ($dateDebut === false || $dateFin === false || $dateFin <= $dateDebut) {
+            $errors[] = "Veuillez choisir des dates valides. La date de fin doit être supérieure à la date de début.";
+        }
+        if (!is_numeric($cadavreData['nb_contributions']) || $cadavreData['nb_contributions'] < 1) {
+            $errors[] = "Le nombre max de contributions doit être un nombre entier supérieur ou égal à 1.";
+        }
+        return $errors;
+    }
+    public function getCadavreInfos($id)
+    {
+        $sql = "SELECT titre_cadavre, date_debut_cadavre, date_fin_cadavre, nb_contributions
+        FROM cadavre
+        WHERE id_cadavre = :id";
+
+        $sth = self::$dbh->prepare($sql);
+        $sth->bindParam(':id', $id);
+        $sth->execute();
+
+        $cadavreInfos = $sth->fetch();
+
+        var_dump($cadavreInfos);
+
+        return $cadavreInfos;
     }
 }

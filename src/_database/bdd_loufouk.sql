@@ -3,7 +3,7 @@ START TRANSACTION;
 SET time_zone = "+00:00";
 
 -- Supprimez les tables s'il elles existent déjà
-DROP TABLE IF EXISTS Soumettre;
+DROP TABLE IF EXISTS Participer;
 DROP TABLE IF EXISTS Contribution;
 DROP TABLE IF EXISTS Cadavre;
 DROP TABLE IF EXISTS Administrateur;
@@ -34,32 +34,35 @@ CREATE TABLE Cadavre (
    date_debut_cadavre DATETIME NOT NULL,
    date_fin_cadavre DATETIME NOT NULL,
    nb_contributions INT NOT NULL,
-   nb_jaime INT NOT NULL,
+   nb_jaime INT,
    id_administrateur INT NOT NULL,
    PRIMARY KEY (id_cadavre),
    FOREIGN KEY (id_administrateur) REFERENCES Administrateur(id_administrateur)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-CREATE TABLE Contribution (
-    id_contribution INT AUTO_INCREMENT PRIMARY KEY,
-    texte_contribution TEXT NOT NULL,
-    date_soumission DATETIME NOT NULL,
-    ordre_soumission INT NOT NULL,
-    id_administrateur INT,
-    id_cadavre INT NOT NULL,
-    FOREIGN KEY (id_administrateur) REFERENCES Administrateur(id_administrateur),
-    FOREIGN KEY (id_cadavre) REFERENCES Cadavre(id_cadavre)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+CREATE TABLE Contribution(
+   id_contribution INT AUTO_INCREMENT PRIMARY KEY,
+   texte_contribution VARCHAR(280) NOT NULL,
+   date_soumission DATETIME NOT NULL,
+   ordre_soumission INT NOT NULL,
+   id_joueur INT,
+   id_administrateur INT,
+   id_cadavre INT NOT NULL,
+   PRIMARY KEY(id_contribution),
+   FOREIGN KEY(id_joueur) REFERENCES Joueur(id_joueur),
+   FOREIGN KEY(id_administrateur) REFERENCES Administrateur(id_administrateur),
+   FOREIGN KEY(id_cadavre) REFERENCES Cadavre(id_cadavre)
+);
 
-CREATE TABLE Soumettre (
+CREATE TABLE Participer(
    id_joueur INT,
    id_cadavre INT,
    num_contribution INT NOT NULL,
-   PRIMARY KEY (id_joueur, id_cadavre),
-   FOREIGN KEY (id_joueur) REFERENCES Joueur(id_joueur),
-   FOREIGN KEY (id_cadavre) REFERENCES Cadavre(id_cadavre)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+   PRIMARY KEY(id_joueur, id_cadavre),
+   FOREIGN KEY(id_joueur) REFERENCES Joueur(id_joueur),
+   FOREIGN KEY(id_cadavre) REFERENCES Cadavre(id_cadavre)
+);ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
 --Triggers pour gérer nombre maximal de contrib et aussi la période de contribution -- 

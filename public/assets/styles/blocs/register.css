@@ -12,7 +12,7 @@ body {
     justify-content: center;
 }
 
-.authForm {
+.registForm {
     background-color: rgba(255, 255, 255, 0.8);
     padding: 20px;
     border-radius: 10px;
@@ -21,31 +21,55 @@ body {
     text-align: center;
 }
 
-.authForm--header {
+.registForm form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    row-gap: 1rem;
+}
+
+.registForm--header {
+    font-weight: 600;
+    line-height: 1.2;
+    font-size: 1.5rem;
+    text-align: center;
+    margin: 0 0 1rem 0;
     color: #333;
-    margin-bottom: 20px;
 }
 
 .authForm--input {
     width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+    border: 1px solid var(--border-input) !important;
+    backdrop-filter: blur(2.5px);
+    outline: none;
+    border: 0;
+    background-color: var(--bg-input);
+    border-radius: 0.75rem;
+    padding: 0.75rem 1rem;
+
+    &::placeholder {
+        color: var(--white);
+    }
 }
 
 .authForm--button {
     width: 100%;
     padding: 10px;
-    background-color: #ff1a1a; 
+    background-color: #ff1a1a;
     color: #fff;
     border: none;
     border-radius: 5px;
     cursor: pointer;
 }
 
+.authForm--input:focus {
+    outline: 2px solid var(--border-input);
+}
+
 .authForm--button:hover {
-    background-color: #cc0000; 
+    background-color: #cc0000;
 }
 
 .authForm--register-link {
@@ -54,7 +78,7 @@ body {
 }
 
 .authForm--register-link a {
-    color: #ff1a1a; 
+    color: #ff1a1a;
     text-decoration: none;
 }
 

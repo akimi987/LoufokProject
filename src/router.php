@@ -48,7 +48,6 @@ switch ($routeInfo[0]) {
     // la commande existe mais la méthode est incorrecte
   case FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
     $allowedMethods = $routeInfo[1];
-    var_dump($allowedMethods);
     $logger->alert('405 - méthode incorrecte :: ' . $allowedMethods);
     $twig->display(
       'error.html.twig',

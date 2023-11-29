@@ -22,6 +22,6 @@ class InscriptionController extends Controller
             'ddn' => $_POST['ddn'],
         ];
         Inscription::getInstance()->registerUser($userData);
-        HTTP::redirect('/connexion');
+        HTTP::redirect('/');
     }
 }

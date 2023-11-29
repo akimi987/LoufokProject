@@ -2,22 +2,22 @@
 {% block title %}Inscription{{ parent() }}{% endblock %}
 {% block content %}
     <body class="bg-gradient screen--wrapper">
-        <!-- Votre en-tête et logo ici -->
+       
         <link href="assets/styles/main.css" rel="stylesheet" type="text/css"/>
 
-        <section class="authForm color-white">
-            <h2 class="authForm--header">
+        <section class="registForm color-white">
+            <h2 class="registForm--header">
                 Inscrivez-vous à
                 <br>
                 Cadavre exquis
             </h2>
             <form action="/inscription/register" method="POST">
-                <input type="text" name="nom_plume" placeholder="Nom de plume" required>
-                <input type="email" name="ad_mail_joueur" placeholder="Adresse e-mail" required>
-                <input type="password" name="mot_de_passe_joueur" placeholder="Mot de passe" required>
-                <input type="text" name="sexe" placeholder="Sexe" required>
-                <input type="date" name="ddn" placeholder="Date de naissance" required>
-                <input type="submit" value="S'inscrire">
+                <input class="authForm--input color-white" type="text" name="nom_plume" placeholder="Nom de plume" required>
+                <input class="authForm--input color-white" type="email" name="ad_mail_joueur" placeholder="Adresse e-mail" required>
+                <input class="authForm--input color-white" type="password" name="mot_de_passe_joueur" placeholder="Mot de passe" required>
+                <input class="authForm--input color-white" type="text" name="sexe" placeholder="Sexe" required>
+                <input class="authForm--input color-white" type="date" name="ddn" placeholder="Date de naissance" required>
+                <input class="authForm--button button-full color-white"  type="submit" value="S'inscrire">
             </form>
         </section>
     </body>
