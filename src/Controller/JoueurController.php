@@ -1,29 +1,78 @@
-<form action="/administrateur/demarrerCadavre" method="POST" class="cadavre-form">
+<?php
 
-    <div class="form-group">
-        <label for="titre">Titre du Cadavre</label>
-        <input type="text" id="titre" name="titre" required>
-    </div>
+declare(strict_types=1);
 
-    <div class="form-group">
-        <label for="dateDebut">Date de Début</label>
-        <input type="datetime-local" id="dateDebut" name="dateDebut" required>
-    </div>
+namespace App\Controller;
 
-    <div class="form-group">
-        <label for="dateFin">Date de Fin</label>
-        <input type="datetime-local" id="dateFin" name="dateFin" required>
-    </div>
+session_start();
 
-    <div class="form-group">
-        <label for="nbContributions">Nombre Max de Contributions</label>
-        <input type="number" id="nbContributions" name="nbContributions" min="1" required>
-    </div>
+use App\Helper\HTTP;
+use App\Model\CadavreModel;
+use App\Model\ParticiperModel;
+use App\Model\Contribution;
 
-    <div class="form-group">
-        <label for="premiereContribution">Première Contribution</label>
-        <textarea id="premiereContribution" name="premiereContribution" rows="4" required></textarea>
-        <span id="charCount" style="position: relative; bottom: 0; right: 0;">0/280</span>
-    </div>
-    <button type="submit" class="submit-btn">Planifier</button>
-</form>
+class JoueurController extends Controller
+{
+    public function index($id)
+    {
+        if (!isset($_SESSION['role'])) {
+            HTTP::redirect('/');
+        }
+
+        $role = $_SESSION['role'];
+
+        if ($role === 'administrateur') {
+            HTTP::redirect("/administrateur/{$id}");
+        }
+
+        // Vérifier s'il y a un cadavre en cours
+        $cadavreModel = CadavreModel::getInstance();
+        $idCadavre = $cadavreModel->getCadavreEnCours();
+        $cadavreEnCours = $cadavreModel->getCadavreInfos($idCadavre);
+        $idJoueur = $_SESSION['user_id'];
+
+        if ($cadavreEnCours) {
+            // Cas 1 : S'il y a un cadavre en cours
+
+            // Récupérer les contributions du cadavre en cours
+            $contributionsCadavre = Contribution::getInstance()->getAllContributionsForCadavre($idCadavre);
+
+            // Récupérer la contribution aléatoire pour le joueur
+            $numContributionAleatoire = Contribution::getInstance()->attribuerContributionAleatoire($idJoueur, $idCadavre);
+            $numContributionAleatoire = intval($numContributionAleatoire);
+            $contributionAleatoire = Contribution::getInstance()->getRandomContribution($idCadavre, $numContributionAleatoire);
+
+            // Vérifier si le joueur a déjà contribué
+            $joueurAContribue = ParticiperModel::getInstance()->joueurAContribue($idJoueur, $idCadavre);
+
+            // Si le joueur a déjà contribué, récupérer sa contribution
+            $joueurContribution = $joueurAContribue ? ParticiperModel::getInstance()->getJoueurContribution($idJoueur, $idCadavre) : null;
+
+            $saisieContribution = (!$joueurAContribue);
+
+            $this->display('participation.html.twig', [
+                'cadavreEnCours' => $cadavreEnCours,
+                'contributionsCadavre' => $contributionsCadavre,
+                'contributionAleatoire' => $contributionAleatoire,
+                'joueurAContribue' => $joueurAContribue,
+                'joueurContribution' => $joueurContribution,
+                'saisieContribution' => $saisieContribution,
+            ]);
+        } else {
+            // Cas 2 : S'il n'y a pas de cadavre en cours
+            $this->display('participation.html.twig', [
+                'cadavreEnCours' => null,
+                'message' => 'Aucun cadavre en cours pour le moment.',
+            ]);
+        }
+    }
+
+    public function soumettreContribution()
+    {
+        $idJoueur = $_SESSION['user_id'];
+        $cadavreModel = CadavreModel::getInstance();
+        $idCadavre = $cadavreModel->getCadavreEnCours();
+        $texteContribution = trim($_POST['texteContribution']);
+        $cadavreModel->addContribution($texteContribution, $idCadavre, $idJoueur);
+    }
+}

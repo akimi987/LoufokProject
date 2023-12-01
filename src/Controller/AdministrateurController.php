@@ -20,7 +20,8 @@ class AdministrateurController extends Controller
             if ($role === 'joueur') {
                 HTTP::redirect("/joueur/{$id}");
             } else {
-                $cadavreEnCours = CadavreModel::getInstance()->getCadavreEnCours();
+                $cadavreId = CadavreModel::getInstance()->getCadavreEnCours();
+                $cadavreEnCours = CadavreModel::getInstance()->getCadavreInfos($cadavreId);
                 $this->display(
                     'administrateur/creationCadavre.html.twig',
                     [
@@ -78,28 +79,4 @@ class AdministrateurController extends Controller
             echo "<p>Error: $error</p>";
         }
     }
-    /*     public function demarrerCadavre()
-    {
-        $id = $_SESSION['user_id'];
-        $cadavreId = CadavreModel::getInstance()->create([
-            'titre_cadavre' => trim($_POST['titre']),
-            'date_debut_cadavre' => trim($_POST['dateDebut']),
-            'date_fin_cadavre' => trim($_POST['dateFin']),
-            'nb_contributions' => trim($_POST['nbContributions']),
-            'id_administrateur' => $id,
-        ]);
-
-        $date = date('Y-m-d H:i:s');
-        Contribution::getInstance()->create([
-            'texte_contribution' => trim($_POST['premiereContribution']),
-            'date_soumission' => $date,
-            'ordre_soumission' => 1,
-            'id_administrateur' => $id,
-            'id_cadavre' => $cadavreId,
-        ]);
-              $cadavre = CadavreModel::getInstance()->getCadavreInfos($cadavreId);
-        $this->display('administrateur/details.html.twig', [
-            'cadavre' => $cadavre,
-        ]); 
-    } */
 }

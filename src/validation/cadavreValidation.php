@@ -47,14 +47,12 @@ class CadavreValidation
 
     public function validateContributionLength(string $contribution): bool
     {
-        // Vérifier que la contribution est comprise entre 50 et 280 caractères
         $contributionLength = strlen($contribution);
         return ($contributionLength >= 50 && $contributionLength <= 280);
     }
 
     public function validateDatesOrder(string $startDate, string $endDate): bool
     {
-        // Vérifier que la date de fin est supérieure à la date de début
         $startDateTimestamp = strtotime($startDate);
         $endDateTimestamp = strtotime($endDate);
 
@@ -63,7 +61,6 @@ class CadavreValidation
 
     public function validateNoOverlap(string $startDate, string $endDate): bool
     {
-        // Vérifier qu'aucun cadavre n'a une période qui se chevauche
         return !$this->cadavreModel->hasOverlap($startDate, $endDate);
     }
     public function validateStartDate(string $startDate): bool

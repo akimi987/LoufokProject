@@ -1,0 +1,43 @@
+{% extends 'layout.html.twig' %}
+{% block title %}Soumettre une Contribution{% endblock %}
+{% block content %}
+<link href="../assets/styles/main.css" rel="stylesheet" type="text/css" />
+<div class="kh-gradient kh">
+    <header>
+        <div class="logo">
+            <img src="/path/to/your/logo.png" alt="Logo">
+        </div>
+        <div>
+            <a
+                href="{{ url('/disconnect') }}"
+                aria-label="Déconnexion de votre espace"
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        fill="currentColor"
+                        d="M5 21q-.825 0-1.413-.588T3 19V5q0-.825.588-1.413T5 3h7v2H5v14h7v2H5Zm11-4l-1.375-1.45l2.55-2.55H9v-2h8.175l-2.55-2.55L16 7l5 5l-5 5Z"
+                    />
+                </svg>
+            </a>
+        </div>
+    </header>
+
+    <section class="cadavre-details-container">
+        <h2>Cadavre en cours</h2>
+        <p>Titre: {{ cadavreDonnees.titre_cadavre }}</p>
+        <p>Date de début: {{ cadavreDonnees.date_debut_cadavre }}</p>
+        <p>Date de fin: {{ cadavreDonnees.date_fin_cadavre }}</p>
+    </section>
+
+    <section class="random-contribution-container">
+        <h3>Contribution Aléatoire</h3>
+        <p>{{ randomContribution.texte_contribution }}</p>
+    </section>
+
+</div>
+{% endblock %}

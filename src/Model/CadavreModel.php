@@ -2,6 +2,8 @@
 
 namespace App\Model;
 
+use App\Validation\ContributionValidation;
+
 class CadavreModel extends Model
 {
     protected $tableName = 'cadavre';
@@ -40,33 +42,77 @@ class CadavreModel extends Model
     }
     public function addContribution($texte, $idCadavre, $idGamer)
     {
+        $aDejaContribue = ParticiperModel::getInstance()->joueurAContribue($idGamer, $idCadavre);
+        if ($aDejaContribue) {
+            return false;
+        }
         $ordreSoumission = $this->calculerOrdreSoumission($idCadavre);
         $date = date('Y-m-d H:i:s');
         Contribution::getInstance()->create([
-            'texte_contribution' => trim($_POST['premiereContribution']),
+            'texte_contribution' => $texte,
             'date_soumission' => $date,
             'ordre_soumission' => $ordreSoumission,
             'id_joueur' => $idGamer,
             'id_cadavre' => $idCadavre,
         ]);
+        ParticiperModel::getInstance()->create([
+            'id_joueur' => $idGamer,
+            'id_cadavre' => $idCadavre,
+        ]);
+
+        return true;
     }
 
     public function getCadavreEnCours()
     {
         $currentDate = date('Y-m-d H:i:s');
 
-        $sql = "SELECT titre_cadavre, date_debut_cadavre, date_fin_cadavre, nb_contributions
-            FROM cadavre
-            WHERE date_fin_cadavre >= :currentDate
-            ORDER BY date_debut_cadavre ASC
-            LIMIT 1";
+        $sql = "SELECT id_cadavre
+                FROM cadavre
+                WHERE date_debut_cadavre <= :currentDate
+                    AND date_fin_cadavre >= :currentDate 
+                    AND id_cadavre NOT IN (SELECT id_cadavre FROM contribution GROUP BY id_cadavre HAVING COUNT(*) >= nb_contributions)
+                ORDER BY date_debut_cadavre ASC
+                LIMIT 1";
 
         $sth = self::$dbh->prepare($sql);
         $sth->bindParam(':currentDate', $currentDate);
         $sth->execute();
 
+        $result = $sth->fetch();
+
+        if ($result) {
+            return $result['id_cadavre'];
+        } else {
+            return null;
+        }
+    }
+    public function getCadavreInfos($id)
+    {
+        $sql = "SELECT  titre_cadavre, date_debut_cadavre, date_fin_cadavre, nb_contributions
+        FROM cadavre
+        WHERE id_cadavre = :id";
+
+        $sth = self::$dbh->prepare($sql);
+        $sth->bindParam(':id', $id);
+        $sth->execute();
+
         return $sth->fetch();
     }
+
+    public function findAllContributions($idCadavre)
+    {
+        $sql = "SELECT * FROM {$this->tableContributionName} WHERE id_cadavre = :idCadavre";
+
+        $sth = self::$dbh->prepare($sql);
+        $sth->bindParam(':idCadavre', $idCadavre);
+        $sth->execute();
+
+        return $sth ? $sth->fetchAll() : [];
+    }
+
+
+
     private function calculerOrdreSoumission($idCadavre)
     {
         $sql = "SELECT COUNT(*) FROM {$this->tableContributionName} WHERE id_cadavre = :idCadavre";
@@ -118,17 +164,5 @@ class CadavreModel extends Model
             $errors[] = "Le nombre max de contributions doit être un nombre entier supérieur ou égal à 1.";
         }
         return $errors;
-    }
-    public function getCadavreInfos($id)
-    {
-        $sql = "SELECT titre_cadavre, date_debut_cadavre, date_fin_cadavre, nb_contributions
-        FROM cadavre
-        WHERE id_cadavre = :id";
-
-        $sth = self::$dbh->prepare($sql);
-        $sth->bindParam(':id', $id);
-        $sth->execute();
-
-        return $sth->fetch();
     }
 }

@@ -17,21 +17,20 @@ class Inscription extends Model
         return self::$instance;
     }
 
-    public function registerUser($userData)
+    public function registerUser(array $userData): void
     {
-        //$hashedPassword = password_hash($userData['mot_de_passe_joueur'], PASSWORD_DEFAULT);
-        $sql = "INSERT INTO $this->tableName (nom_plume, ad_mail_joueur, mot_de_passe_joueur, sexe, ddn) 
-                VALUES (:nom_plume, :ad_mail_joueur, :mot_de_passe_joueur, :sexe, :ddn)";
-        $sth = self::$dbh->prepare($sql);
+        // Ajoutez ici la logique pour enregistrer l'utilisateur dans la base de données
+        // Assurez-vous de sécuriser le mot de passe avant de le stocker
 
-        $sth->bindParam(':nom_plume', $userData['nom_plume']);
-        $sth->bindParam(':ad_mail_joueur', $userData['ad_mail_joueur']);
-        $sth->bindParam(':mot_de_passe_joueur', $hashedPassword);
-        $sth->bindParam(':sexe', $userData['sexe']);
-        $sth->bindParam(':ddn', $userData['ddn']);
+        // Exemple :
 
-        //var_dump($userData);
 
-        $sth->execute();
+        $this->create([
+            'nom_plume' => $userData['nom_plume'],
+            'ad_mail_joueur' => $userData['ad_mail_joueur'],
+            'mot_de_passe_joueur' => $userData['mot_de_passe_joueur'],
+            'sexe' => $userData['sexe'],
+            'ddn' => $userData['ddn'],
+        ]);
     }
 }

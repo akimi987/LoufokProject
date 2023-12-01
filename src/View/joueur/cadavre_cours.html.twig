@@ -1,0 +1,12 @@
+{% extends 'layout.html.twig' %}
+{% block title %}Cadavre en Cours{% endblock %}
+{% block content %}
+  <div>
+    <h2>Cadavre en Cours</h2>
+    <p>Titre du Cadavre: {{ cadavreDonnees.titre_cadavre }}</p>
+    <p>Date de Fin: {{ cadavreDonnees.date_fin_cadavre }}</p>
+    {% if not alreadyParticipated %}
+      <a href="{{ url('/joueur/soumettre') }}">Soumettre une Contribution</a>
+    {% endif %}
+  </div>
+{% endblock %}
