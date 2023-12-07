@@ -25,14 +25,13 @@ class JoueurController extends Controller
             HTTP::redirect("/administrateur/{$id}");
         }
 
-        // Vérifier s'il y a un cadavre en cours
         $cadavreModel = CadavreModel::getInstance();
         $idCadavre = $cadavreModel->getCadavreEnCours();
         $cadavreEnCours = $cadavreModel->getCadavreInfos($idCadavre);
         $idJoueur = $_SESSION['user_id'];
 
         if ($cadavreEnCours) {
-            // Cas 1 : S'il y a un cadavre en cours
+            // S'il y a un cadavre en cours
 
             // Récupérer les contributions du cadavre en cours
             $contributionsCadavre = Contribution::getInstance()->getAllContributionsForCadavre($idCadavre);
@@ -59,7 +58,7 @@ class JoueurController extends Controller
                 'saisieContribution' => $saisieContribution,
             ]);
         } else {
-            // Cas 2 : S'il n'y a pas de cadavre en cours
+            // S'il n'y a pas de cadavre en cours
             $this->display('participation.html.twig', [
                 'cadavreEnCours' => null,
                 'message' => 'Aucun cadavre en cours pour le moment.',

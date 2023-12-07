@@ -19,12 +19,6 @@ class Inscription extends Model
 
     public function registerUser(array $userData): void
     {
-        // Ajoutez ici la logique pour enregistrer l'utilisateur dans la base de données
-        // Assurez-vous de sécuriser le mot de passe avant de le stocker
-
-        // Exemple :
-
-
         $this->create([
             'nom_plume' => $userData['nom_plume'],
             'ad_mail_joueur' => $userData['ad_mail_joueur'],

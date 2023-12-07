@@ -27,13 +27,8 @@ class ParticiperModel extends Model
     }
     public function attribuerNumeroAleatoire(int $idJoueur, int $idCadavre): void
     {
-        // Récupérer le nombre de contributions existantes pour ce cadavre
         $nombreContributions = $this->getNombreContributions($idCadavre);
-
-        // Générer un numéro aléatoire basé sur le nombre de contributions
         $numAleatoire = rand(1, $nombreContributions + 1);
-
-        // Insérer le numéro aléatoire dans la table participer
         $sql = "INSERT INTO {$this->tableName} (id_joueur, id_cadavre, num_contribution) VALUES (:idJoueur, :idCadavre, :numAleatoire)";
         $sth = self::$dbh->prepare($sql);
         $sth->bindParam(':idJoueur', $idJoueur);

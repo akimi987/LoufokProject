@@ -1,5 +1,5 @@
 <?php
-// ContributionValidator.php
+
 namespace App\Validation;
 
 class ContributionValidation
